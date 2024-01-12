@@ -4,6 +4,7 @@ using Hello_World.Interface;
 using Hello_World.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Polly;
 
 namespace Hello_World.Controllers
 {
@@ -22,26 +23,73 @@ namespace Hello_World.Controllers
         [HttpGet]
         public IActionResult GetStatuses()
         {
+            /*
             var statuses = _mapper.Map<List<StatusDto>>(_statusRepository.GetStatuses());
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             return Ok(statuses);
+            */
+            var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(45) };
+            List<StatusDto> statuses = null;
+
+            try
+            {
+                statuses = _mapper.Map<List<StatusDto>>(_statusRepository.GetStatuses());
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                return Ok(statuses);
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ ở đây, có thể log, thông báo, hoặc thực hiện các hành động cần thiết.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+
         }
         [HttpGet]
         public IActionResult GetBillByStatusId(int statusId)
         {
-            var bills = _mapper.Map<List<BillDto>>(_statusRepository.GetBillByStatus(statusId));
-            if (!ModelState.IsValid)
+            //var bills = _mapper.Map<List<BillDto>>(_statusRepository.GetBillByStatus(statusId));
+            //if (!ModelState.IsValid)
+            //{
+            //return BadRequest();
+            //}
+            //return Ok(bills);
+            var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(45) };
+            var circuitBreakerPolicy = Policy
+            .Handle<Exception>()
+            .CircuitBreaker(3, TimeSpan.FromSeconds(30));
+            List<BillDto> bills = null;
+
+            try
             {
-                return BadRequest();
+                bills = _mapper.Map<List<BillDto>>(_statusRepository.GetBillByStatus(statusId));
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(bills);
             }
-            return Ok(bills);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
+
         }
         [HttpPost]
         public IActionResult CreateStatus([FromBody] StatusDto createStatus)
         {
+            var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(45) };
             if (createStatus == null)
             {
                 return BadRequest(ModelState);

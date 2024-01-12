@@ -68,3 +68,8 @@ C:\Users\ADMIN\source\repos\Hello World\obj\Debug\net6.0\Hello World.genruntimec
 C:\Users\ADMIN\source\repos\Hello World\obj\Debug\net6.0\ref\Hello World.dll
 C:\Users\ADMIN\source\repos\Hello World\bin\Debug\net6.0\AutoMapper.dll
 C:\Users\ADMIN\source\repos\Hello World\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\ADMIN\source\repos\Hello World\obj\Debug\net6.0\Hello World.sourcelink.json
+C:\Users\ADMIN\source\repos\Hello World\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\ADMIN\source\repos\Hello World\bin\Debug\net6.0\Microsoft.Bcl.TimeProvider.dll
+C:\Users\ADMIN\source\repos\Hello World\bin\Debug\net6.0\Polly.dll
+C:\Users\ADMIN\source\repos\Hello World\bin\Debug\net6.0\Polly.Core.dll

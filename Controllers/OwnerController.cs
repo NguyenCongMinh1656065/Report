@@ -21,13 +21,22 @@ namespace Hello_World.Controllers
         }
         [HttpGet]
         public IActionResult GetOwners() 
-        { 
-            var owners = _mapper.Map<List<OwnerDto>>(_ownerRepository.GetOwners());
-            if (!ModelState.IsValid)
+        {
+            List<OwnerDto> owners = null;
+            try
             {
-                return BadRequest(ModelState);
+                owners = _mapper.Map<List<OwnerDto>>(_ownerRepository.GetOwners());
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                return Ok(owners);
             }
-            return Ok(owners);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
         }
         [HttpPost]
         public IActionResult CreateOwner([FromBody] OwnerDto ownerCreate )
